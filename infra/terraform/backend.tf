@@ -15,3 +15,5 @@ terraform {
     dynamodb_table = "swing-trading-terraform-locks"
   }
 }
+
+
