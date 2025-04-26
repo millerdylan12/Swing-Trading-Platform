@@ -32,16 +32,17 @@ jobs:
 
       - name: Terraform Init
         working-directory: infra/terraform
-        run: terraform init
+        run: terraform init -input=false
 
       - name: Terraform Plan
         working-directory: infra/terraform
-        run: terraform plan
+        run: terraform plan -input=false
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         working-directory: infra/terraform
-        run: terraform apply -auto-approve
+        run: terraform apply -input=false -auto-approve
+
 
 
 
