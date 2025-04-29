@@ -42,4 +42,3 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         working-directory: infra/terraform
         run: terraform apply -input=false -auto-approve
-
