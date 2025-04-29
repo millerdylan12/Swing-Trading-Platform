@@ -44,7 +44,7 @@ module "vpc" {
   name = "swing-trade-vpc"
   cidr = var.vpc_cidr
 
-  azs             = data.aws_availability_zones.available.names[0:3]
+  azs             = slice(data.aws_availability_zones.available.names, 0, 3)
   public_subnets  = var.public_subnets
   private_subnets = var.private_subnets
 
@@ -102,3 +102,4 @@ output "private_subnets" {
   description = "IDs of the private subnets"
   value       = module.vpc.private_subnets
 }
+
