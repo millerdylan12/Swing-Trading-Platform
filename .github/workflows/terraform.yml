@@ -4,11 +4,10 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'infra/terraform/**'
+  workflow_dispatch:   # lets you kick it off manually
 
 permissions:
-  id-token: write    # for OIDC
+  id-token: write
   contents: read
 
 jobs:
@@ -16,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials via OIDC
+      - name: Configure AWS via OIDC
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ secrets.ACTIONS_ROLE_ARN }}
@@ -28,15 +27,15 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
-      - name: Terraform Init
+      - name: Init
         working-directory: infra/terraform
         run: terraform init
 
-      - name: Terraform Plan
+      - name: Plan
         working-directory: infra/terraform
         run: terraform plan
 
-      - name: Terraform Apply
+      - name: Apply
         if: github.ref == 'refs/heads/main'
         working-directory: infra/terraform
         run: terraform apply -auto-approve
