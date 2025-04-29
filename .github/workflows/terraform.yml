@@ -2,23 +2,24 @@ name: Terraform CI/CD
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'infra/terraform/**'
   pull_request:
     paths:
       - 'infra/terraform/**'
-  workflow_dispatch:
 
 permissions:
-  id-token: write
-  contents: read
+  id-token: write       # for OIDC auth
+  contents: read        # to checkout code
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Configure AWS Credentials via OIDC
@@ -32,13 +33,13 @@ jobs:
 
       - name: Terraform Init
         working-directory: infra/terraform
-        run: terraform init -input=false
+        run: terraform init
 
       - name: Terraform Plan
         working-directory: infra/terraform
-        run: terraform plan -input=false
+        run: terraform plan
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         working-directory: infra/terraform
-        run: terraform apply -input=false -auto-approve
+        run: terraform apply -auto-approve
