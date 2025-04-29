@@ -6,23 +6,20 @@ on:
       - main
     paths:
       - 'infra/terraform/**'
-  pull_request:
-    paths:
-      - 'infra/terraform/**'
 
 permissions:
-  id-token: write       # for OIDC auth
-  contents: read        # to checkout code
+  id-token: write    # for OIDC
+  contents: read
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Configure AWS Credentials via OIDC
+      - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ secrets.ACTIONS_ROLE_ARN }}
@@ -40,6 +37,6 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main'
         working-directory: infra/terraform
         run: terraform apply -auto-approve
